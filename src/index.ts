@@ -1,6 +1,14 @@
+import { swagger } from "@elysiajs/swagger";
 import { Elysia } from "elysia";
+import { recordRoute } from "./routes/record.route";
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
+export const app = new Elysia()
+  .use(swagger())
+  .use(recordRoute)
+  .onError(({ code }) => {
+    if (code === "NOT_FOUND") return "Route not found :(";
+  })
+  .listen(3000);
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
